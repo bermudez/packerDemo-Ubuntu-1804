@@ -1,6 +1,14 @@
 {
-    "builders": [
-        {
+    "variables": {
+            "headless": "false",
+            "iso_checksum": "a2cb36dc010d98ad9253ea5ad5a07fd6b409e3412c48f1860536970b073c98f5",
+            "iso_checksum_type": "sha256",
+            "mirror": "http://cdimage.ubuntu.com/releases/18.04/release/ubuntu-18.04.2-server-amd64.iso",
+            "output_vm_name": "packer-ubuntu-18.04.2",
+            "ssh_username": "vagrant",
+            "ssh_password": "vagrant"
+            },
+    "builders": [{
             "type": "virtualbox-iso",
             "boot_command": [
                 "<esc><wait>",
@@ -28,21 +36,21 @@
                 "<enter><wait>"
             ],
             "boot_wait": "12s",
-            "disk_size": 81920,
+            "disk_size": "81920",
             "guest_os_type": "Ubuntu_64",
-            "headless": false,
+            "headless": "{{user `headless`}}",
             "http_directory": "http",
-            "iso_url": "http://cdimage.ubuntu.com/releases/18.04/release/ubuntu-18.04.2-server-amd64.iso",
-            "iso_checksum_type": "sha256",
-            "iso_checksum": "a2cb36dc010d98ad9253ea5ad5a07fd6b409e3412c48f1860536970b073c98f5",
-            "ssh_username": "vagrant",
-            "ssh_password": "vagrant",
+            "iso_url": "{{user `mirror`}}",
+            "iso_checksum_type": "{{user `iso_checksum_type`}}",
+            "iso_checksum": "{{user `iso_checksum`}}",
+            "ssh_username": "{{user `ssh_username`}}",
+            "ssh_password": "{{user `ssh_password`}}",
             "ssh_port": 22,
             "ssh_wait_timeout": "10000s",
             "shutdown_command": "echo 'vagrant'|sudo -S shutdown -P now",
             "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
             "virtualbox_version_file": ".vbox_version",
-            "vm_name": "packer-ubuntu-18.04.2-amd64",
+            "vm_name": "{{user `output_vm_name`}}",
             "vboxmanage": [
             [
                 "modifyvm",
@@ -74,6 +82,7 @@
     "post-processors": [{
       "type": "vagrant",
       "compression_level": "8",
-      "output": "output/ubuntu-18.04.2.box"
+      "output": "output/ubuntu-18.04.2.box",
+      "keep_input_artifact": true
     }]
   }
