@@ -70,14 +70,16 @@
     "provisioners": [
         {
             "type": "shell",
-            "script": "scripts/init.sh",
+            "scripts": [
+		"scripts/common/vagrant.sh",
+		"scripts/init.sh",
+		"scripts/ubuntu/aws-cli.sh",
+		"scripts/common/sshd.sh",
+		"scripts/cleanup.sh",
+		"scripts/common/minimize.sh"
+		],
             "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
         },
-        {
-            "type": "shell",
-            "script": "scripts/cleanup.sh",
-            "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
-        }    
     ],
     "post-processors": [{
       "type": "vagrant",
